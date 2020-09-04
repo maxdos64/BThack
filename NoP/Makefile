@@ -1,5 +1,5 @@
 # Makefile for libusb based examples
-BTSTACK_ROOT ?= ../
+BTSTACK_ROOT ?= ../btstack
 
 CORE += btstack_stdin_posix.c btstack_tlv_posix.c
 
@@ -109,11 +109,11 @@ ATT_OBJ     = $(ATT:.c=.o)
 #GATT_CLIENT_OBJ = $(GATT_CLIENT:.c=.o)
 GATT_SERVER_OBJ = $(GATT_SERVER:.c=.o)
 
-.DEFAULT_GOAL := numeric_entry
+.DEFAULT_GOAL := nop.bin
 
-all: numeric_entry responder_test initiator_test
+all: nop.bin responder_test initiator_test
 
-numeric_entry: numeric_entry.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
+nop.bin: nop.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
 
 responder_test: responder_test.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
@@ -126,4 +126,4 @@ ${COMMON_OBJ} ${CORE_OBJ} ${ATT_OBJ}: %.o: %.c
 	${CC} -c ${CFLAGS} ${LDFLAGS} $< -o $@
 
 clean:
-	rm -f *.o numeric_entry responder_test initiator_test
+	rm -f *.o *.bin responder_test initiator_test

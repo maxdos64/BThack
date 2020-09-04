@@ -109,11 +109,11 @@ ATT_OBJ     = $(ATT:.c=.o)
 #GATT_CLIENT_OBJ = $(GATT_CLIENT:.c=.o)
 GATT_SERVER_OBJ = $(GATT_SERVER:.c=.o)
 
-.DEFAULT_GOAL := numeric_entry_reverse
+.DEFAULT_GOAL := pon.bin
 
-all: numeric_entry_reverse responder_test initiator_test
+all: pon.bin responder_test initiator_test
 
-numeric_entry_reverse: numeric_entry_reverse.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
+pon.bin: pon.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
 
 responder_test: responder_test.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
@@ -126,4 +126,4 @@ ${COMMON_OBJ} ${CORE_OBJ} ${ATT_OBJ}: %.o: %.c
 	${CC} -c ${CFLAGS} ${LDFLAGS} $< -o $@
 
 clean:
-	rm -f *.o numeric_entry_reverse responder_test initiator_test
+	rm -f *.o *.bin responder_test initiator_test

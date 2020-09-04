@@ -111,8 +111,6 @@ GATT_SERVER_OBJ = $(GATT_SERVER:.c=.o)
 
 .DEFAULT_GOAL := full_mitm
 
-all: full_mitm.bin responder.bin initiator.bin
-
 debug: full_mitm_dbg
 
 %_dbg: %.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
@@ -120,6 +118,8 @@ debug: full_mitm_dbg
 
 %.bin: %.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
+
+all: full_mitm.bin responder.bin initiator.bin
 
 ${COMMON_OBJ} ${CORE_OBJ} ${ATT_OBJ}: %.o: %.c
 	${CC} -c ${CFLAGS} ${LDFLAGS} $< -o $@

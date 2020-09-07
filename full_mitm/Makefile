@@ -6,7 +6,7 @@ CORE += btstack_stdin_posix.c btstack_tlv_posix.c
 COMMON += hci_transport_h2_libusb.c btstack_run_loop_posix.c le_device_db_fs.c btstack_link_key_db_fs.c wav_util.c btstack_network_posix.c
 COMMON += btstack_audio_portaudio.c btstack_chipset_zephyr.c
 
-CFLAGS  += -g -std=c99 -Werror -Wall -Wmissing-prototypes -Wstrict-prototypes -Wshadow -Wunused-parameter -Wredundant-decls -Wsign-compare
+CFLAGS  += -g -std=c99 -Werror -Wno-error=redundant-decls -Wall -Wmissing-prototypes -Wstrict-prototypes -Wshadow -Wunused-parameter -Wredundant-decls -Wsign-compare
 # CFLAGS += -Werror
 # CFLAGS += -pedantic
 
@@ -109,7 +109,7 @@ ATT_OBJ     = $(ATT:.c=.o)
 #GATT_CLIENT_OBJ = $(GATT_CLIENT:.c=.o)
 GATT_SERVER_OBJ = $(GATT_SERVER:.c=.o)
 
-.DEFAULT_GOAL := full_mitm
+.DEFAULT_GOAL := full_mitm.bin
 
 debug: full_mitm_dbg
 

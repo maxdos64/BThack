@@ -310,7 +310,7 @@ static void register_mitm_options(void)
 int main(int argc, const char * argv[])
 {
 	char pklg_path[100];
-	int initiator_usb_device_id;
+	uint8_t initiator_usb_device_id;
 
 	/* Parse arguments */
 	if(argc < 4)

@@ -224,7 +224,7 @@ def main():
 
     if(args.overshadow_name is None):
         #TODO change position in adv packet
-        args.overshadow_name = " " + args.target_pattern
+        args.overshadow_name = b" " + args.target_pattern
 
     print(f"Jamming all advertisements of {current_target_addr}")
     time.sleep(1)

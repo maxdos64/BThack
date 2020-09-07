@@ -111,15 +111,9 @@ GATT_SERVER_OBJ = $(GATT_SERVER:.c=.o)
 
 .DEFAULT_GOAL := pon.bin
 
-all: pon.bin responder_test initiator_test
+all: pon.bin responder.bin initiator.bin
 
-pon.bin: pon.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
-	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
-
-responder_test: responder_test.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
-	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
-
-initiator_test: initiator_test.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
+%.bin: %.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
 
 ${COMMON_OBJ} ${CORE_OBJ} ${ATT_OBJ}: %.o: %.c

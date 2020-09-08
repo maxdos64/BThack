@@ -109,7 +109,7 @@ ATT_OBJ     = $(ATT:.c=.o)
 #GATT_CLIENT_OBJ = $(GATT_CLIENT:.c=.o)
 GATT_SERVER_OBJ = $(GATT_SERVER:.c=.o)
 
-.DEFAULT_GOAL := pon.bin
+.DEFAULT_GOAL := all
 
 all: pon.bin responder.bin initiator.bin
 

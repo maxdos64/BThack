@@ -6,7 +6,7 @@ CORE += btstack_stdin_posix.c btstack_tlv_posix.c
 COMMON += hci_transport_h2_libusb.c btstack_run_loop_posix.c le_device_db_fs.c btstack_link_key_db_fs.c wav_util.c btstack_network_posix.c
 COMMON += btstack_audio_portaudio.c btstack_chipset_zephyr.c
 
-CFLAGS  += -g -std=c99 -Werror -Wno-error=redundant-decls -Wall -Wmissing-prototypes -Wstrict-prototypes -Wshadow -Wunused-parameter -Wredundant-decls -Wsign-compare
+CFLAGS  += -g -std=c99 -Werror -Wno-error=redundant-decls -Wall -Wmissing-prototypes -Wstrict-prototypes -Wshadow -Wunused-parameter -Wsign-compare
 # CFLAGS += -Werror
 # CFLAGS += -pedantic
 
@@ -114,10 +114,10 @@ GATT_SERVER_OBJ = $(GATT_SERVER:.c=.o)
 debug: full_mitm_dbg
 
 %_dbg: %.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
-	${CC} ${CFLAGS} ${LDFLAGS} -D DEBUG_IPC -o $@ $^
+	${CC} ${CFLAGS} $^ ${LDFLAGS} -D DEBUG_IPC -o $@
 
 %.bin: %.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
-	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
+	${CC} ${CFLAGS} $^ ${LDFLAGS} -o $@
 
 all: full_mitm.bin responder.bin initiator.bin
 

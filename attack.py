@@ -248,9 +248,9 @@ def main():
         print("starting auto")
         attack_process = subprocess.Popen([AUTO_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name, current_target_addr], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     elif args.attack_variant == 'nop':
-        attack_process = subprocess.Popen([NOP_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        attack_process = subprocess.Popen([NOP_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name, current_target_addr], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     elif args.attack_variant == 'pon':
-        attack_process = subprocess.Popen([PON_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        attack_process = subprocess.Popen([PON_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name, current_target_addr], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     else:
         print("invalid attack_variant \"" + args.attack_variant + "\"")
 

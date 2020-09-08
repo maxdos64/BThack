@@ -311,7 +311,7 @@ int main(int argc, const char * argv[])
 	if(argc < 3)
 	{
 		printf("Too few arguments provided\n");
-		printf("Usage:./%s [responder_device_id] [IO_CAPs]\n", argv[0]);
+		printf("Usage:./%s [responder_device_id] [IO_CAPs; options are NO_INPUT_NO_OUTPUT, DISPLAY_ONLY, DISPLAY_YES_NO, KEYBOARD_ONLY, KEYBOARD_DISPLAY]\n", argv[0]);
 		exit(0);
 	}
 	responder_usb_device_id = strtol(argv[1], 0, 10);
@@ -370,7 +370,7 @@ int main(int argc, const char * argv[])
 	}
 	else
 	{
-		printf("INVALID IOCAPs: [%s]\n", argv[2]);
+		printf("INVALID IOCAPs: [%s] (options are NO_INPUT_NO_OUTPUT, DISPLAY_ONLY, DISPLAY_YES_NO, KEYBOARD_ONLY, KEYBOARD_DISPLAY)\n", argv[2]);
 		exit(1);
 	}
 

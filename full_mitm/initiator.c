@@ -316,7 +316,7 @@ int main(int argc, const char * argv[])
 	if(argc < 4)
 	{
 		printf("Too few arguments provided\n");
-		printf("Usage:./%s [initiator_device_id] [target_mac, e.g. aa:bb:cc:dd:ee:ff] [IO_CAPs]\n", argv[0]);
+		printf("Usage:./%s [initiator_device_id] [target_mac, e.g. aa:bb:cc:dd:ee:ff] [IO_CAPs; options are NO_INPUT_NO_OUTPUT, DISPLAY_ONLY, DISPLAY_YES_NO, KEYBOARD_ONLY, KEYBOARD_DISPLAY]\n", argv[0]);
 		exit(0);
 	}
 	initiator_usb_device_id = strtol(argv[1], 0, 10);
@@ -394,7 +394,7 @@ int main(int argc, const char * argv[])
 	}
 	else
 	{
-		printf("INVALID IOCAPs: [%s]\n", argv[3]);
+		printf("INVALID IOCAPs: [%s] (options are NO_INPUT_NO_OUTPUT, DISPLAY_ONLY, DISPLAY_YES_NO, KEYBOARD_ONLY, KEYBOARD_DISPLAY)\n", argv[3]);
 		exit(1);
 	}
 

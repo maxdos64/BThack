@@ -36,7 +36,7 @@ If you encounter any difficulties or find a description to imprecise please reac
 ### Usage
 0. ==**Please check this repo out using 'git clone --recurse-submodules'**==
 1. Run the Makefiles in the subdirectories of the desired attack variants (pon, nop, full_mitm)
-2. Connect 2 USB Bluetooth controller that are compatible with BTstack ([list](https://github.com/bluekitchen/btstack#evaluation-platforms)) - they should appear under `lsusb`
+2. Connect 2 USB Bluetooth controller that are compatible with BTstack ([list](https://github.com/bluekitchen/btstack#evaluation-platforms)) - they should appear under `lsusb`**ensure that the Responder advertises using BLE not BR/EDR**
 
 You have two different complexities of the attack available:
 

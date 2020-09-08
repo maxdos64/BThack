@@ -199,11 +199,13 @@ def main():
     if(args.target_mac is not None):
         args.target_pattern = bytes.fromhex(args.target_mac.replace(":","")[::-1])
         args.pattern_position = PATTERN_POSITION_MAC
+        current_target_addr = args.target_mac
 
     if(args.target_pattern is None):
         args.target_pattern, target_name = search_target(args.init_dev_num, args.target_pattern)
         args.target_pattern = bytes.fromhex(args.target_pattern.replace(":","")[::-1])
         args.pattern_position = PATTERN_POSITION_MAC
+        current_target_addr = args.target_pattern
         if(args.overshadow_name is None):
             args.overshadow_name = target_name
 

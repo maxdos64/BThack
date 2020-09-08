@@ -8,7 +8,7 @@ Bluetooth SIG: [SIG security alert](https://www.bluetooth.com/learn-about-blueto
 Apple: [iOS / IPadOS](https://support.apple.com/en-us/HT211168)
 Google: ...
 
-*Every pairing between any Bluetooth devices using Numeric Comparison or Passkey Entry is vulnerable to the Method Confusion attack.*
+*Every pairing between any BLE devices using Numeric Comparison or Passkey Entry is vulnerable to the Method Confusion attack.*
 
 #### Fix
 Currently there is **no fix available** that would not massively affect backwards compatibility to older Bluetooth devices.

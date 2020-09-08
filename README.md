@@ -49,7 +49,13 @@ You have two different complexities of the attack available:
 2. Start the [attack.py](https://github.com/maxdos64/BThack/blob/master/attack.py) script
 3. Select your devices and the attack mode ('auto' selects the optimal method dynamically) 
 
+#### Simulate victim devices
+To simulate BLE victims you may use the programs `initiator` and `responder` in the folder full_mitm
 
 ##### Suppressing victim advertisements
 In order to lead a realistic victim-Initiator into attempting the pairing with our MitM-Responder the framework offers the option to selectively jam the advertisement messages of the victim-Responder. In this case at least 3 [BBC:microbits](https://microbit.org/) are required as they contain the 
 [nrf5x](https://www.nordicsemi.com/Products/Low-power-short-range-wireless/nRF51822) chip that is utelized for jamming. For this option you are also required to flash the microbits with our customized version of the btlejack-firmware (See Readme in the respective subfolder)
+
+### Troubleshooting
+Unfortunately it happens regularly that devices get stuck in the execution of their modified firmware.
+We are trying to slowly narrow down these issues and fix them. For now, we recommend to stop the software; powercycle the devices; and restart the software.

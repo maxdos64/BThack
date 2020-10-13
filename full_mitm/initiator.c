@@ -236,6 +236,15 @@ static void initiator_hci_packet_handler(uint8_t packet_type, uint16_t channel, 
 	if (packet_type != HCI_EVENT_PACKET) return;
 	hci_con_handle_t con_handle;
 
+	//if (!hci_can_send_command_packet_now())
+	//{
+	//	hci_send_cmd(&hci_write_local_name, "this is a test");
+	//}
+	//else
+	//{
+	//	printf("FAILED TO SET LOCAL NAME!!\n");
+	//}
+
 	switch (hci_event_packet_get_type(packet)) {
 		case BTSTACK_EVENT_STATE:
 			// BTstack activated, get started

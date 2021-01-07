@@ -6,7 +6,7 @@ CORE += btstack_stdin_posix.c btstack_tlv_posix.c
 COMMON += hci_transport_h2_libusb.c btstack_run_loop_posix.c le_device_db_fs.c btstack_link_key_db_fs.c wav_util.c btstack_network_posix.c
 COMMON += btstack_audio_portaudio.c btstack_chipset_zephyr.c
 
-CFLAGS  += -g -std=c99 -Werror -Wno-error=redundant-decls -Wall -Wmissing-prototypes -Wstrict-prototypes -Wshadow -Wunused-parameter -Wsign-compare
+CFLAGS  += -g -std=c99 -Werror -Wall -Wmissing-prototypes -Wstrict-prototypes -Wshadow -Wunused-parameter -Wno-error=redundant-decls -Wsign-compare
 # CFLAGS += -Werror
 # CFLAGS += -pedantic
 
@@ -67,9 +67,6 @@ VPATH += ${BTSTACK_ROOT}/chipset/zephyr
 CFLAGS  += $(shell pkg-config libusb-1.0 --cflags)
 LDFLAGS += $(shell pkg-config libusb-1.0 --libs)
 
-csr_set_bd_addr: ${CORE_OBJ} ${COMMON_OBJ} btstack_chipset_csr.o csr_set_bd_addr.o
-	${CC} $^ ${CFLAGS} ${LDFLAGS} -o $@
-
 # use pkg-config for portaudio
 # CFLAGS  += $(shell pkg-config portaudio-2.0 --cflags) -DHAVE_PORTAUDIO
 # LDFLAGS += $(shell pkg-config portaudio-2.0 --libs)
@@ -114,6 +111,9 @@ GATT_SERVER_OBJ = $(GATT_SERVER:.c=.o)
 all: nop.bin responder.bin initiator.bin
 
 %.bin: %.c ${CORE_OBJ} ${COMMON_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ}
+	${CC} ${CFLAGS} $^ ${LDFLAGS} -o $@
+
+csr_set_bd_addr: ${CORE_OBJ} ${COMMON_OBJ} btstack_chipset_csr.o csr_set_bd_addr.o
 	${CC} ${CFLAGS} $^ ${LDFLAGS} -o $@
 
 ${COMMON_OBJ} ${CORE_OBJ} ${ATT_OBJ}: %.o: %.c
